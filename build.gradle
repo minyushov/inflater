@@ -1,0 +1,30 @@
+buildscript {
+	ext {
+		androidMinSdkVersion = 19
+		androidCompileSdkVersion = 26
+		androidTargetSdkVersion = 26
+		androidBuildToolsVersion = "26.0.1"
+		androidSupportLibraryVersion = "26.0.0"
+
+		espressoVersion = "3.0.0"
+	}
+
+	repositories {
+		maven { url "https://maven.google.com" }
+		jcenter()
+	}
+	dependencies {
+		classpath 'com.android.tools.build:gradle:2.3.3'
+	}
+}
+
+allprojects {
+	repositories {
+		maven { url "https://maven.google.com" }
+		jcenter()
+	}
+}
+
+task clean(type: Delete) {
+	delete rootProject.buildDir
+}
