@@ -19,6 +19,8 @@ final class LayoutInflater extends PhoneLayoutInflater {
 	@NonNull
 	private final List<ContextWrapper.PostInflationListener> listeners = new ArrayList<>();
 
+	private final FactoryWrapper factory;
+
 	private Field constructorArguments;
 
 	LayoutInflater(android.view.LayoutInflater inflater, Context context) {
@@ -31,6 +33,8 @@ final class LayoutInflater extends PhoneLayoutInflater {
 			this.interceptors.addAll(((ContextWrapper) context).interceptors);
 			this.listeners.addAll(((ContextWrapper) context).listeners);
 		}
+
+		super.setFactory2(factory = new FactoryWrapper());
 	}
 
 	@Override
@@ -40,19 +44,19 @@ final class LayoutInflater extends PhoneLayoutInflater {
 
 	@Override
 	public void setFactory(Factory factory) {
-		if (!(factory instanceof WrapperFactory)) {
-			super.setFactory(new WrapperFactory(factory));
+		if (factory instanceof FactoryWrapper) {
+			this.factory.setFactory(((FactoryWrapper) factory).factory);
 		} else {
-			super.setFactory(factory);
+			this.factory.setFactory(factory);
 		}
 	}
 
 	@Override
 	public void setFactory2(Factory2 factory) {
-		if (!(factory instanceof WrapperFactory2)) {
-			super.setFactory2(new WrapperFactory2(factory));
+		if (factory instanceof FactoryWrapper) {
+			this.factory.setFactory2(((FactoryWrapper) factory).factory2);
 		} else {
-			super.setFactory2(factory);
+			this.factory.setFactory2(factory);
 		}
 	}
 
@@ -125,38 +129,28 @@ final class LayoutInflater extends PhoneLayoutInflater {
 		return null;
 	}
 
-	private class WrapperFactory implements Factory {
-		private final Factory factory;
+	private class FactoryWrapper implements Factory2 {
+		@Nullable
+		Factory factory;
+		@Nullable
+		Factory2 factory2;
 
-		WrapperFactory(Factory factory) {
+		void setFactory(@Nullable Factory factory) {
 			this.factory = factory;
+		}
+
+		void setFactory2(@Nullable Factory2 factory2) {
+			this.factory = factory2;
+			this.factory2 = factory2;
 		}
 
 		@Override
 		public View onCreateView(String name, Context context, AttributeSet attrs) {
 			View view = LayoutInflater.this.onCreateView(context, null, name, attrs);
 			if (view == null) {
-				view = factory.onCreateView(name, context, attrs);
-			}
-			if (view != null) {
-				LayoutInflater.this.onViewCreated(view, attrs);
-			}
-			return view;
-		}
-	}
-
-	private class WrapperFactory2 implements Factory2 {
-		private final Factory2 factory;
-
-		WrapperFactory2(Factory2 factory) {
-			this.factory = factory;
-		}
-
-		@Override
-		public View onCreateView(String name, Context context, AttributeSet attrs) {
-			View view = LayoutInflater.this.onCreateView(context, null, name, attrs);
-			if (view == null) {
-				view = factory.onCreateView(name, context, attrs);
+				if (factory != null) {
+					view = factory.onCreateView(name, context, attrs);
+				}
 			}
 			if (view != null) {
 				LayoutInflater.this.onViewCreated(view, attrs);
@@ -168,7 +162,11 @@ final class LayoutInflater extends PhoneLayoutInflater {
 		public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
 			View view = LayoutInflater.this.onCreateView(context, parent, name, attrs);
 			if (view == null) {
-				view = factory.onCreateView(parent, name, context, attrs);
+				if (factory2 != null) {
+					view = factory2.onCreateView(parent, name, context, attrs);
+				} else if (factory != null) {
+					view = factory.onCreateView(name, context, attrs);
+				}
 			}
 			if (view != null) {
 				LayoutInflater.this.onViewCreated(view, attrs);
