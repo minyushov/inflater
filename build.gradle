@@ -4,7 +4,7 @@ buildscript {
 		androidCompileSdkVersion = 26
 		androidTargetSdkVersion = 26
 		androidBuildToolsVersion = "26.0.1"
-		androidSupportLibraryVersion = "26.0.0"
+		androidSupportLibraryVersion = "26.0.2"
 
 		espressoVersion = "3.0.0"
 	}
