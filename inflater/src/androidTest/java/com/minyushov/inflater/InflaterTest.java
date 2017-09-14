@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,7 +22,10 @@ public class InflaterTest {
 	@Test
 	public void testInflationInterceptor() throws Exception {
 		Context context = InstrumentationRegistry.getTargetContext();
-		android.view.LayoutInflater inflater = (android.view.LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		Assert.assertNotNull("LayoutInflater is null", inflater);
+
 		View view = inflater.inflate(com.minyushov.inflater.test.R.layout.test_layout, null);
 		Assert.assertTrue("Default layout inflater is used, but inflated view is not system TextView", Objects.equals(view.getClass(), android.widget.TextView.class));
 
@@ -38,7 +42,9 @@ public class InflaterTest {
 				})
 				.build();
 
-		inflater = (android.view.LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		Assert.assertNotNull("LayoutInflater is null", inflater);
+
 		view = inflater.inflate(com.minyushov.inflater.test.R.layout.test_layout, null);
 		Assert.assertTrue("InflationInterceptor is used, but inflated class is not CustomTextView", Objects.equals(view.getClass(), CustomTextView.class));
 	}
@@ -46,9 +52,14 @@ public class InflaterTest {
 	@Test
 	public void testInflationInterceptorAppCompat() throws Exception {
 		Context context = InstrumentationRegistry.getTargetContext();
-		android.view.LayoutInflater inflater = (android.view.LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View view = inflater.inflate(com.minyushov.inflater.test.R.layout.test_layout_app_compat, null);
-		Assert.assertTrue("Default layout inflater is used, but inflated view is not AppCompatTextView", Objects.equals(view.getClass(), android.support.v7.widget.AppCompatTextView.class));
+
+		{
+			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			Assert.assertNotNull("LayoutInflater is null", inflater);
+
+			View view = inflater.inflate(com.minyushov.inflater.test.R.layout.test_layout_app_compat, null);
+			Assert.assertTrue("Default layout inflater is used, but inflated view is not AppCompatTextView", Objects.equals(view.getClass(), android.support.v7.widget.AppCompatTextView.class));
+		}
 
 		context = new ContextWrapper.Builder(context)
 				.addInterceptor(new ContextWrapper.InflationInterceptor() {
@@ -63,15 +74,23 @@ public class InflaterTest {
 				})
 				.build();
 
-		inflater = (android.view.LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		view = inflater.inflate(com.minyushov.inflater.test.R.layout.test_layout_app_compat, null);
-		Assert.assertTrue("InflationInterceptor is used, but inflated class is not CustomTextView", Objects.equals(view.getClass(), CustomTextView.class));
+		{
+			com.minyushov.inflater.LayoutInflater inflater = (com.minyushov.inflater.LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			Assert.assertNotNull("LayoutInflater is null", inflater);
+
+			inflater.setFactory2(inflater);
+
+			View view = inflater.inflate(com.minyushov.inflater.test.R.layout.test_layout_app_compat, null);
+			Assert.assertTrue("InflationInterceptor is used, but inflated class is not CustomTextView", Objects.equals(view.getClass(), CustomTextView.class));
+		}
 	}
 
 	@Test
 	public void testPostInflationListener() throws Exception {
 		Context context = InstrumentationRegistry.getTargetContext();
+
 		android.view.LayoutInflater inflater = (android.view.LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		Assert.assertNotNull("LayoutInflater is null", inflater);
 
 		TextView view = (TextView) inflater.inflate(com.minyushov.inflater.test.R.layout.test_layout, null);
 		view.setTypeface(Typeface.DEFAULT);
@@ -89,6 +108,8 @@ public class InflaterTest {
 				.build();
 
 		inflater = (android.view.LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		Assert.assertNotNull("LayoutInflater is null", inflater);
+
 		view = (TextView) inflater.inflate(com.minyushov.inflater.test.R.layout.test_layout, null);
 		Assert.assertTrue("PostInflationListener is used, but non-default typeface is not applied", Objects.equals(Typeface.MONOSPACE, view.getTypeface()));
 	}

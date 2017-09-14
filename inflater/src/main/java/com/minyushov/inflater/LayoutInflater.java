@@ -11,7 +11,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-final class LayoutInflater extends PhoneLayoutInflater {
+final class LayoutInflater extends PhoneLayoutInflater implements android.view.LayoutInflater.Factory2 {
 	private static final String TAG = "Inflater";
 
 	@NonNull
@@ -19,7 +19,7 @@ final class LayoutInflater extends PhoneLayoutInflater {
 	@NonNull
 	private final List<ContextWrapper.PostInflationListener> listeners = new ArrayList<>();
 
-	private final FactoryWrapper factory;
+	private final FactoryWrapper factory = new FactoryWrapper();
 
 	private Field constructorArguments;
 
@@ -28,13 +28,12 @@ final class LayoutInflater extends PhoneLayoutInflater {
 		if (inflater instanceof LayoutInflater) {
 			this.interceptors.addAll(((LayoutInflater) inflater).interceptors);
 			this.listeners.addAll(((LayoutInflater) inflater).listeners);
+			this.constructorArguments = ((LayoutInflater) inflater).constructorArguments;
 		}
 		if (context instanceof ContextWrapper) {
 			this.interceptors.addAll(((ContextWrapper) context).interceptors);
 			this.listeners.addAll(((ContextWrapper) context).listeners);
 		}
-
-		super.setFactory2(factory = new FactoryWrapper());
 	}
 
 	@Override
@@ -44,6 +43,10 @@ final class LayoutInflater extends PhoneLayoutInflater {
 
 	@Override
 	public void setFactory(Factory factory) {
+		if (getFactory() == null) {
+			super.setFactory(this.factory);
+		}
+
 		if (factory instanceof FactoryWrapper) {
 			this.factory.setFactory(((FactoryWrapper) factory).factory);
 		} else {
@@ -53,11 +56,25 @@ final class LayoutInflater extends PhoneLayoutInflater {
 
 	@Override
 	public void setFactory2(Factory2 factory) {
+		if (getFactory() == null) {
+			super.setFactory2(this.factory);
+		}
+
 		if (factory instanceof FactoryWrapper) {
 			this.factory.setFactory2(((FactoryWrapper) factory).factory2);
 		} else {
 			this.factory.setFactory2(factory);
 		}
+	}
+
+	@Override
+	public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+		return onCreateView(context, parent, name, attrs);
+	}
+
+	@Override
+	public View onCreateView(String name, Context context, AttributeSet attrs) {
+		return onCreateView(context, null, name, attrs);
 	}
 
 	@Override
