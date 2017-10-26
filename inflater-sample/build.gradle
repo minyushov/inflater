@@ -20,8 +20,8 @@ configurations.all {
 }
 
 dependencies {
-	compile project(":inflater")
+	implementation project(":inflater")
 
-	compile "com.android.support:appcompat-v7:$androidSupportLibraryVersion"
-	compile "com.android.support.constraint:constraint-layout:1.0.2"
+	implementation "com.android.support:appcompat-v7:$androidSupportLibraryVersion"
+	implementation "com.android.support.constraint:constraint-layout:1.0.2"
 }
