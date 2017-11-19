@@ -1,10 +1,5 @@
-plugins {
-	id "com.github.dcendents.android-maven" version "1.5"
-	id "com.jfrog.bintray" version "1.7.3"
-}
-
 apply plugin: 'com.android.library'
-apply from: 'publish.gradle'
+apply plugin: 'bintray-simple'
 
 android {
 	compileSdkVersion androidCompileSdkVersion
@@ -17,13 +12,19 @@ android {
 	}
 }
 
-configurations {
-	javadocDeps
-}
-
 dependencies {
 	compileOnly "com.android.support:support-annotations:$androidSupportLibraryVersion"
-	javadocDeps "com.android.support:support-annotations:$androidSupportLibraryVersion"
+	documentation "com.android.support:support-annotations:$androidSupportLibraryVersion"
 	androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
 	androidTestImplementation "com.android.support:appcompat-v7:$androidSupportLibraryVersion"
+}
+
+bintrayUpload {
+	dryRun = true
+	repo = "android"
+	groupId = "com.minyushov.android"
+	artifactId = "inflater"
+	version = "1.0.4"
+	vcsUrl = "https://github.com/minyushov/inflater.git"
+	license = "Apache-2.0"
 }
