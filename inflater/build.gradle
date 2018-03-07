@@ -12,6 +12,10 @@ android {
 	}
 }
 
+configurations {
+	documentation
+}
+
 dependencies {
 	compileOnly "com.android.support:support-annotations:$androidSupportLibraryVersion"
 	documentation "com.android.support:support-annotations:$androidSupportLibraryVersion"
@@ -20,11 +24,19 @@ dependencies {
 }
 
 bintrayUpload {
-	dryRun = true
+	dryRun = false
 	repo = "android"
 	groupId = "com.minyushov.android"
 	artifactId = "inflater"
-	version = "1.0.5"
+	version = "1.0.6"
 	vcsUrl = "https://github.com/minyushov/inflater.git"
 	license = "Apache-2.0"
+	docsSettings {
+		classpath += configurations.documentation
+		options {
+			docTitle "Android Inflater ${bintrayUpload.version}"
+			windowTitle docTitle
+			links "https://docs.oracle.com/javase/8/docs/api/"
+		}
+	}
 }
