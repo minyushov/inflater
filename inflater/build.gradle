@@ -37,6 +37,7 @@ bintrayUpload {
 			docTitle "Android Inflater ${bintrayUpload.version}"
 			windowTitle docTitle
 			links "https://docs.oracle.com/javase/8/docs/api/"
+			links "https://developer.android.com/reference/"
 		}
 	}
 }
