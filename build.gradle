@@ -1,32 +1,32 @@
 buildscript {
-	ext {
-		androidMinSdkVersion = 19
-		androidCompileSdkVersion = 27
-		androidTargetSdkVersion = 27
-		androidBuildToolsVersion = "27.0.3"
-		androidSupportLibraryVersion = "27.1.1"
+  ext {
+    androidMinSdkVersion = 19
+    androidCompileSdkVersion = 27
+    androidTargetSdkVersion = 27
+    androidBuildToolsVersion = "27.0.3"
+    androidSupportLibraryVersion = "27.1.1"
 
-		espressoVersion = "3.0.0"
-	}
+    espressoVersion = "3.0.0"
+  }
 
-	repositories {
-		jcenter()
-		google()
-		maven { url 'https://dl.bintray.com/minyushov/gradle' }
-	}
-	dependencies {
-		classpath 'com.android.tools.build:gradle:3.1.1'
-		classpath 'com.minyushov.gradle:bintray:1.0.4'
-	}
+  repositories {
+    jcenter()
+    google()
+    maven { url 'https://dl.bintray.com/minyushov/gradle' }
+  }
+  dependencies {
+    classpath 'com.android.tools.build:gradle:3.1.1'
+    classpath 'com.minyushov.gradle:bintray:1.0.4'
+  }
 }
 
 allprojects {
-	repositories {
-		jcenter()
-		google()
-	}
+  repositories {
+    jcenter()
+    google()
+  }
 }
 
 task clean(type: Delete) {
-	delete rootProject.buildDir
+  delete rootProject.buildDir
 }

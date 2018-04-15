@@ -1,27 +1,27 @@
 apply plugin: 'com.android.application'
 
 android {
-	compileSdkVersion androidCompileSdkVersion
-	buildToolsVersion androidBuildToolsVersion
+  compileSdkVersion androidCompileSdkVersion
+  buildToolsVersion androidBuildToolsVersion
 
-	defaultConfig {
-		applicationId "com.minyushov.inflater.sample"
-		minSdkVersion androidMinSdkVersion
-		targetSdkVersion androidTargetSdkVersion
-		versionCode 1
-		versionName "1.0"
-	}
+  defaultConfig {
+    applicationId "com.minyushov.inflater.sample"
+    minSdkVersion androidMinSdkVersion
+    targetSdkVersion androidTargetSdkVersion
+    versionCode 1
+    versionName "1.0"
+  }
 }
 
 configurations.all {
-	resolutionStrategy {
-		force "com.android.support:support-annotations:$androidSupportLibraryVersion"
-	}
+  resolutionStrategy {
+    force "com.android.support:support-annotations:$androidSupportLibraryVersion"
+  }
 }
 
 dependencies {
-	implementation project(":inflater")
+  implementation project(":inflater")
 
-	implementation "com.android.support:appcompat-v7:$androidSupportLibraryVersion"
-	implementation "com.android.support.constraint:constraint-layout:1.1.0"
+  implementation "com.android.support:appcompat-v7:$androidSupportLibraryVersion"
+  implementation "com.android.support.constraint:constraint-layout:1.1.0"
 }
