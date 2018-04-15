@@ -1,4 +1,6 @@
 # Inflater
+[![Download](https://api.bintray.com/packages/minyushov/android/inflater/images/download.svg)](https://bintray.com/minyushov/android/inflater/_latestVersion)
+
 An implementation of ContextWrapper that provides pre- and post-inflation callbacks.
 
 # Getting started
@@ -12,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.minyushov.android:inflater:1.0.6'
+    compile 'com.minyushov.android:inflater:1.0.7'
 }
 ```
 

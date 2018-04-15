@@ -28,7 +28,7 @@ bintrayUpload {
   repo = "android"
   groupId = "com.minyushov.android"
   artifactId = "inflater"
-  version = "1.0.6"
+  version = "1.0.7"
   vcsUrl = "https://github.com/minyushov/inflater.git"
   license = "Apache-2.0"
   docsSettings {
