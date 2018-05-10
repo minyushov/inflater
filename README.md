@@ -1,11 +1,11 @@
 # Inflater
-[![Download](https://api.bintray.com/packages/minyushov/android/inflater/images/download.svg)](https://bintray.com/minyushov/android/inflater/_latestVersion)
 
 An implementation of ContextWrapper that provides pre- and post-inflation callbacks.
 
 # Getting started
 
 Include inflater as a Gradle compile dependency:
+
 ```groovy
 repositories {
     maven {
@@ -14,11 +14,14 @@ repositories {
 }
 
 dependencies {
-    compile 'com.minyushov.android:inflater:1.0.7'
+    compile 'com.minyushov.android:inflater:x'
 }
 ```
 
+Please replace `x` with the latest version: [![Download](https://api.bintray.com/packages/minyushov/android/inflater/images/download.svg)](https://bintray.com/minyushov/android/inflater/_latestVersion)
+
 Implement InflationInterceptor or PostInflationListener:
+
 ```java
 private final ContextWrapper.InflationInterceptor inflationInterceptor = new ContextWrapper.InflationInterceptor() {
   @Nullable
@@ -43,6 +46,7 @@ private final ContextWrapper.PostInflationListener postInflationListener = new C
 ```
 
 Attach interceptors and listeners to an Activity using ContextWrapper:
+
 ```java
 public class MainActivity extends AppCompatActivity {
   @Override
