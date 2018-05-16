@@ -9,6 +9,10 @@ android {
     targetSdkVersion androidTargetSdkVersion
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
+
+  libraryVariants.all {
+    it.generateBuildConfig.enabled = false
+  }
 }
 
 configurations {
