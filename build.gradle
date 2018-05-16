@@ -1,6 +1,6 @@
 buildscript {
   ext {
-    androidMinSdkVersion = 19
+    androidMinSdkVersion = 17
     androidCompileSdkVersion = 27
     androidTargetSdkVersion = 27
     androidBuildToolsVersion = "27.0.3"
