@@ -3,7 +3,6 @@ apply plugin: 'com.minyushov.bintray'
 
 android {
   compileSdkVersion androidCompileSdkVersion
-  buildToolsVersion androidBuildToolsVersion
 
   defaultConfig {
     minSdkVersion androidMinSdkVersion
