@@ -7,7 +7,7 @@ android {
   defaultConfig {
     minSdkVersion androidMinSdkVersion
     targetSdkVersion androidTargetSdkVersion
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 
   libraryVariants.all {
@@ -20,10 +20,10 @@ configurations {
 }
 
 dependencies {
-  compileOnly "com.android.support:support-annotations:$androidSupportLibraryVersion"
-  documentation "com.android.support:support-annotations:$androidSupportLibraryVersion"
-  androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
-  androidTestImplementation "com.android.support:appcompat-v7:$androidSupportLibraryVersion"
+  compileOnly "androidx.annotation:annotation:$androidXVersion"
+  documentation "androidx.annotation:annotation:$androidXVersion"
+  androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
+  androidTestImplementation "androidx.appcompat:appcompat:$androidXVersion"
 }
 
 bintrayUpload {
@@ -31,7 +31,7 @@ bintrayUpload {
   repo = "android"
   groupId = "com.minyushov.android"
   artifactId = "inflater"
-  version = "1.0.9"
+  version = "1.1.0-alpha1"
   vcsUrl = "https://github.com/minyushov/inflater.git"
   license = "Apache-2.0"
   docsSettings {

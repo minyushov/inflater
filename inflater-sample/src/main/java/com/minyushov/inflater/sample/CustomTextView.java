@@ -2,8 +2,9 @@ package com.minyushov.inflater.sample;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 public class CustomTextView extends AppCompatTextView {
   public CustomTextView(Context context) {

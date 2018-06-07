@@ -2,25 +2,26 @@ package com.minyushov.inflater;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.Objects;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Objects;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.test.InstrumentationRegistry;
+import androidx.test.runner.AndroidJUnit4;
+
 @RunWith(AndroidJUnit4.class)
 public class InflaterTest {
   @Test
-  public void testInflationInterceptor() throws Exception {
+  public void testInflationInterceptor() {
     Context context = InstrumentationRegistry.getTargetContext();
 
     LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -50,7 +51,7 @@ public class InflaterTest {
   }
 
   @Test
-  public void testInflationInterceptorAppCompat() throws Exception {
+  public void testInflationInterceptorAppCompat() {
     Context context = InstrumentationRegistry.getTargetContext();
 
     {
@@ -58,7 +59,7 @@ public class InflaterTest {
       Assert.assertNotNull("LayoutInflater is null", inflater);
 
       View view = inflater.inflate(com.minyushov.inflater.test.R.layout.test_layout_app_compat, null);
-      Assert.assertTrue("Default layout inflater is used, but inflated view is not AppCompatTextView", Objects.equals(view.getClass(), android.support.v7.widget.AppCompatTextView.class));
+      Assert.assertTrue("Default layout inflater is used, but inflated view is not AppCompatTextView", Objects.equals(view.getClass(), androidx.appcompat.widget.AppCompatTextView.class));
     }
 
     context = new ContextWrapper.Builder(context)
@@ -66,7 +67,7 @@ public class InflaterTest {
           @Nullable
           @Override
           public View onCreateView(@NonNull Context context, @Nullable View parent, @NonNull String name, @Nullable AttributeSet attrs) {
-            if (Objects.equals(name, "android.support.v7.widget.AppCompatTextView")) {
+            if (Objects.equals(name, "androidx.appcompat.widget.AppCompatTextView")) {
               return new CustomTextView(context, attrs);
             }
             return null;
@@ -86,7 +87,7 @@ public class InflaterTest {
   }
 
   @Test
-  public void testPostInflationListener() throws Exception {
+  public void testPostInflationListener() {
     Context context = InstrumentationRegistry.getTargetContext();
 
     android.view.LayoutInflater inflater = (android.view.LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

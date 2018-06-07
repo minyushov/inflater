@@ -1,11 +1,10 @@
 buildscript {
   ext {
     androidMinSdkVersion = 17
-    androidCompileSdkVersion = 27
-    androidTargetSdkVersion = 27
-    androidSupportLibraryVersion = "27.1.1"
-
-    espressoVersion = "3.0.0"
+    androidCompileSdkVersion = 28
+    androidTargetSdkVersion = 28
+    androidXVersion = "1.0.0-alpha3"
+    espressoVersion = "3.1.0-alpha3"
   }
 
   repositories {
