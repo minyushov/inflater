@@ -3,8 +3,8 @@ buildscript {
     androidMinSdkVersion = 17
     androidCompileSdkVersion = 28
     androidTargetSdkVersion = 28
-    androidXVersion = "1.0.0-alpha3"
-    espressoVersion = "3.1.0-alpha3"
+    androidXVersion = "1.0.0-beta01"
+    espressoVersion = "3.1.0-alpha4"
   }
 
   repositories {
