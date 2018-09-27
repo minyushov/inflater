@@ -16,5 +16,5 @@ dependencies {
   implementation project(":inflater")
 
   implementation "androidx.appcompat:appcompat:$androidXVersion"
-  implementation "androidx.constraintlayout:constraintlayout:1.1.2"
+  implementation "androidx.constraintlayout:constraintlayout:1.1.3"
 }
