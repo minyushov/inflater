@@ -8,9 +8,7 @@ Include inflater as a Gradle compile dependency:
 
 ```groovy
 repositories {
-    maven {
-        url  "http://dl.bintray.com/minyushov/android" 
-    }
+    jcenter()
 }
 
 dependencies {
