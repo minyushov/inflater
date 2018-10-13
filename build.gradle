@@ -4,7 +4,7 @@ buildscript {
     androidCompileSdkVersion = 28
     androidTargetSdkVersion = 28
     androidXVersion = "1.0.0"
-    espressoVersion = "3.1.0-alpha4"
+    espressoVersion = "3.1.0-beta02"
   }
 
   repositories {
