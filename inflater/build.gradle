@@ -11,7 +11,9 @@ android {
   }
 
   libraryVariants.all {
-    it.generateBuildConfig.enabled = false
+    it.generateBuildConfigProvider.configure {
+      it.enabled = false
+    }
   }
 }
 
@@ -20,10 +22,10 @@ configurations {
 }
 
 dependencies {
-  compileOnly "androidx.annotation:annotation:$androidXVersion"
-  documentation "androidx.annotation:annotation:$androidXVersion"
-  androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
-  androidTestImplementation "androidx.appcompat:appcompat:$androidXVersion"
+  compileOnly "androidx.annotation:annotation:1.0.1"
+  documentation "androidx.annotation:annotation:1.0.1"
+  androidTestImplementation "androidx.test.espresso:espresso-core:3.1.1"
+  androidTestImplementation "androidx.appcompat:appcompat:1.0.2"
 }
 
 bintrayUpload {
@@ -31,7 +33,7 @@ bintrayUpload {
   repo = "android"
   groupId = "com.minyushov.android"
   artifactId = "inflater"
-  version = "1.1.0"
+  version = "1.1.1"
   vcsUrl = "https://github.com/minyushov/inflater.git"
   license = "Apache-2.0"
   docsSettings {

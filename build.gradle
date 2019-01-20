@@ -3,19 +3,18 @@ buildscript {
     androidMinSdkVersion = 17
     androidCompileSdkVersion = 28
     androidTargetSdkVersion = 28
-    androidXVersion = "1.0.0"
-    espressoVersion = "3.1.0-beta02"
   }
 
   repositories {
+    mavenLocal()
     jcenter()
     google()
     maven { url 'https://dl.bintray.com/minyushov/gradle' }
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.2.1'
-    classpath 'com.minyushov.gradle:bintray:1.1.0'
+    classpath 'com.android.tools.build:gradle:3.4.0-beta01'
+    classpath 'com.minyushov.gradle:bintray:1.2.0'
   }
 }
 
