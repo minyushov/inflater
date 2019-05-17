@@ -12,8 +12,8 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.4.0-beta01'
-    classpath 'com.minyushov.gradle:bintray:1.2.0'
+    classpath 'com.android.tools.build:gradle:3.4.1'
+    classpath 'com.minyushov.gradle:bintray:1.2.3'
   }
 }
 
@@ -24,6 +24,6 @@ allprojects {
   }
 }
 
-task clean(type: Delete) {
+tasks.register("clean", Delete) {
   delete rootProject.buildDir
 }

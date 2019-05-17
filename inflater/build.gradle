@@ -17,13 +17,8 @@ android {
   }
 }
 
-configurations {
-  documentation
-}
-
 dependencies {
-  compileOnly "androidx.annotation:annotation:1.0.1"
-  documentation "androidx.annotation:annotation:1.0.1"
+  compileOnly "androidx.annotation:annotation:1.0.2"
   androidTestImplementation "androidx.test.espresso:espresso-core:3.1.1"
   androidTestImplementation "androidx.appcompat:appcompat:1.0.2"
 }
@@ -37,7 +32,11 @@ bintrayUpload {
   vcsUrl = "https://github.com/minyushov/inflater.git"
   license = "Apache-2.0"
   docsSettings {
-    classpath += configurations.documentation
+    project.android.libraryVariants.all { variant ->
+      if (variant.name == 'release') {
+        classpath += files(variant.javaCompileProvider.get().classpath)
+      }
+    }
     options {
       docTitle "Android Inflater ${bintrayUpload.version}"
       windowTitle docTitle
