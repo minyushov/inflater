@@ -1,6 +1,7 @@
 package com.minyushov.inflater;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -121,26 +122,38 @@ final class LayoutInflater extends PhoneLayoutInflater implements android.view.L
 
   private View createView(@NonNull Context context, @Nullable View parent, @NonNull String name, @Nullable AttributeSet attrs) {
     if (name.indexOf('.') > -1) {
-      if (constructorArguments == null) {
-        constructorArguments = ReflectionUtils.getField(android.view.LayoutInflater.class, "mConstructorArgs");
+      Object[] constructorArgs = null;
+      Object currentContext = null;
+
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+        if (constructorArguments == null) {
+          constructorArguments = ReflectionUtils.getField(android.view.LayoutInflater.class, "mConstructorArgs");
+        }
+
+        if (constructorArguments != null) {
+          constructorArgs = (Object[]) ReflectionUtils.getValue(constructorArguments, this);
+        }
+
+        if (constructorArgs != null) {
+          currentContext = constructorArgs[0];
+          constructorArgs[0] = context;
+          ReflectionUtils.setValue(constructorArguments, this, constructorArgs);
+        }
       }
 
-      Object[] constructorArgs = (Object[]) ReflectionUtils.getValue(constructorArguments, this);
-      Object currentContext = null;
-      if (constructorArgs != null) {
-        currentContext = constructorArgs[0];
-        constructorArgs[0] = context;
-        ReflectionUtils.setValue(constructorArguments, this, constructorArgs);
-      }
       try {
         return createView(name, null, attrs);
       } catch (ClassNotFoundException exception) {
         Log.w(TAG, "Unable to inflate view", exception);
       } finally {
-        if (constructorArgs != null) {
-          constructorArgs[0] = currentContext;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+          if (constructorArgs != null) {
+            constructorArgs[0] = currentContext;
+          }
+          if (constructorArguments != null) {
+            ReflectionUtils.setValue(constructorArguments, this, constructorArgs);
+          }
         }
-        ReflectionUtils.setValue(constructorArguments, this, constructorArgs);
       }
     }
 
