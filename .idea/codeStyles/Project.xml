@@ -59,6 +59,10 @@
           <emptyLine />
         </value>
       </option>
+      <option name="JD_ALIGN_PARAM_COMMENTS" value="false" />
+      <option name="JD_ADD_BLANK_AFTER_PARM_COMMENTS" value="true" />
+      <option name="JD_ADD_BLANK_AFTER_RETURN" value="true" />
+      <option name="JD_PARAM_DESCRIPTION_ON_NEW_LINE" value="true" />
     </JavaCodeStyleSettings>
     <JetCodeStyleSettings>
       <option name="PACKAGES_TO_USE_STAR_IMPORTS">
@@ -80,6 +84,8 @@
       </indentOptions>
     </codeStyleSettings>
     <codeStyleSettings language="JAVA">
+      <option name="SPACE_WITHIN_ARRAY_INITIALIZER_BRACES" value="true" />
+      <option name="SPACE_BEFORE_ARRAY_INITIALIZER_LBRACE" value="true" />
       <indentOptions>
         <option name="INDENT_SIZE" value="2" />
         <option name="CONTINUATION_INDENT_SIZE" value="2" />
