@@ -15,103 +15,105 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.test.InstrumentationRegistry;
-import androidx.test.runner.AndroidJUnit4;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 @RunWith(AndroidJUnit4.class)
 public class InflaterTest {
   @Test
   public void testInflationInterceptor() {
-    Context context = InstrumentationRegistry.getTargetContext();
+    Context context = ApplicationProvider.getApplicationContext();
 
     LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     Assert.assertNotNull("LayoutInflater is null", inflater);
 
     View view = inflater.inflate(com.minyushov.inflater.test.R.layout.test_layout, null);
-    Assert.assertTrue("Default layout inflater is used, but inflated view is not system TextView", Objects.equals(view.getClass(), android.widget.TextView.class));
+    Assert.assertEquals("Default layout inflater is used, but inflated view is not system TextView", view.getClass(), TextView.class);
 
     context = new ContextWrapper.Builder(context)
-        .addInterceptor(new ContextWrapper.InflationInterceptor() {
-          @Nullable
-          @Override
-          public View onCreateView(@NonNull Context context, @Nullable View parent, @NonNull String name, @Nullable AttributeSet attrs) {
-            if (Objects.equals(name, "TextView")) {
-              return new CustomTextView(context, attrs);
-            }
-            return null;
+      .setUseDefaultFactory(true)
+      .addInterceptor(new ContextWrapper.InflationInterceptor() {
+        @Nullable
+        @Override
+        public View onCreateView(@NonNull Context context, @Nullable View parent, @NonNull String name, @Nullable AttributeSet attrs) {
+          if (Objects.equals(name, "TextView")) {
+            return new CustomTextView(context, attrs);
           }
-        })
-        .build();
+          return null;
+        }
+      })
+      .build();
 
     inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     Assert.assertNotNull("LayoutInflater is null", inflater);
 
     view = inflater.inflate(com.minyushov.inflater.test.R.layout.test_layout, null);
-    Assert.assertTrue("InflationInterceptor is used, but inflated class is not CustomTextView", Objects.equals(view.getClass(), CustomTextView.class));
+    Assert.assertEquals("InflationInterceptor is used, but inflated class is not CustomTextView", CustomTextView.class, view.getClass());
   }
 
   @Test
   public void testInflationInterceptorAppCompat() {
-    Context context = InstrumentationRegistry.getTargetContext();
+    Context context = ApplicationProvider.getApplicationContext();
 
     {
       LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       Assert.assertNotNull("LayoutInflater is null", inflater);
 
       View view = inflater.inflate(com.minyushov.inflater.test.R.layout.test_layout_app_compat, null);
-      Assert.assertTrue("Default layout inflater is used, but inflated view is not AppCompatTextView", Objects.equals(view.getClass(), androidx.appcompat.widget.AppCompatTextView.class));
+      Assert.assertEquals("Default layout inflater is used, but inflated view is not AppCompatTextView", AppCompatTextView.class, view.getClass());
     }
 
     context = new ContextWrapper.Builder(context)
-        .addInterceptor(new ContextWrapper.InflationInterceptor() {
-          @Nullable
-          @Override
-          public View onCreateView(@NonNull Context context, @Nullable View parent, @NonNull String name, @Nullable AttributeSet attrs) {
-            if (Objects.equals(name, "androidx.appcompat.widget.AppCompatTextView")) {
-              return new CustomTextView(context, attrs);
-            }
-            return null;
+      .setUseDefaultFactory(true)
+      .addInterceptor(new ContextWrapper.InflationInterceptor() {
+        @Nullable
+        @Override
+        public View onCreateView(@NonNull Context context, @Nullable View parent, @NonNull String name, @Nullable AttributeSet attrs) {
+          if (Objects.equals(name, "androidx.appcompat.widget.AppCompatTextView")) {
+            return new CustomTextView(context, attrs);
           }
-        })
-        .build();
+          return null;
+        }
+      })
+      .build();
 
     {
       com.minyushov.inflater.LayoutInflater inflater = (com.minyushov.inflater.LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       Assert.assertNotNull("LayoutInflater is null", inflater);
 
-      inflater.setFactory2(inflater);
-
       View view = inflater.inflate(com.minyushov.inflater.test.R.layout.test_layout_app_compat, null);
-      Assert.assertTrue("InflationInterceptor is used, but inflated class is not CustomTextView", Objects.equals(view.getClass(), CustomTextView.class));
+      Assert.assertEquals("InflationInterceptor is used, but inflated class is not CustomTextView", CustomTextView.class, view.getClass());
     }
   }
 
   @Test
   public void testPostInflationListener() {
-    Context context = InstrumentationRegistry.getTargetContext();
+    Context context = ApplicationProvider.getApplicationContext();
 
     android.view.LayoutInflater inflater = (android.view.LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     Assert.assertNotNull("LayoutInflater is null", inflater);
 
     TextView view = (TextView) inflater.inflate(com.minyushov.inflater.test.R.layout.test_layout, null);
     view.setTypeface(Typeface.DEFAULT);
-    Assert.assertTrue("Default layout inflater is used, and non-default typeface is set", Objects.equals(Typeface.DEFAULT, view.getTypeface()));
+    Assert.assertEquals("Default layout inflater is used, and non-default typeface is set", Typeface.DEFAULT, view.getTypeface());
 
     context = new ContextWrapper.Builder(context)
-        .addListener(new ContextWrapper.PostInflationListener() {
-          @Override
-          public void onViewCreated(@NonNull View view, @Nullable AttributeSet attrs) {
-            if (view instanceof TextView) {
-              ((TextView) view).setTypeface(Typeface.MONOSPACE);
-            }
+      .setUseDefaultFactory(true)
+      .addListener(new ContextWrapper.PostInflationListener() {
+        @Override
+        public void onViewCreated(@NonNull View view, @Nullable AttributeSet attrs) {
+          if (view instanceof TextView) {
+            ((TextView) view).setTypeface(Typeface.MONOSPACE);
           }
-        })
-        .build();
+        }
+      })
+      .build();
 
     inflater = (android.view.LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     Assert.assertNotNull("LayoutInflater is null", inflater);
 
     view = (TextView) inflater.inflate(com.minyushov.inflater.test.R.layout.test_layout, null);
-    Assert.assertTrue("PostInflationListener is used, but non-default typeface is not applied", Objects.equals(Typeface.MONOSPACE, view.getTypeface()));
+    Assert.assertEquals("PostInflationListener is used, but non-default typeface is not applied", view.getTypeface(), Typeface.MONOSPACE);
   }
 }

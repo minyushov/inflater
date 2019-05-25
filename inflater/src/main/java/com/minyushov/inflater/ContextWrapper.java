@@ -22,13 +22,13 @@ public final class ContextWrapper extends android.content.ContextWrapper {
      * This method is called before a view is created during inflation.
      *
      * @param context
-     *     {@link Context} that will be used to create a view.
+     *   {@link Context} that will be used to create a view.
      * @param parent
-     *     The future parent of the returned view. May be null.
+     *   The future parent of the returned view. May be null.
      * @param name
-     *     Class name of the View to be created.
+     *   Class name of the View to be created.
      * @param attrs
-     *     An AttributeSet of attributes to apply to the View. May be null.
+     *   An AttributeSet of attributes to apply to the View. May be null.
      *
      * @return New instance of the View or null if interception is not applied.
      */
@@ -44,9 +44,9 @@ public final class ContextWrapper extends android.content.ContextWrapper {
      * This method is called after a view is created during inflation.
      *
      * @param view
-     *     Created view.
+     *   Created view.
      * @param attrs
-     *     {@link AttributeSet} applied to the view. May be null.
+     *   {@link AttributeSet} applied to the view. May be null.
      */
     void onViewCreated(@NonNull View view, @Nullable AttributeSet attrs);
   }
@@ -55,10 +55,11 @@ public final class ContextWrapper extends android.content.ContextWrapper {
   final List<InflationInterceptor> interceptors = new ArrayList<>();
   @NonNull
   final List<PostInflationListener> listeners = new ArrayList<>();
+  boolean useDefaultFactory = false;
 
   private LayoutInflater inflater;
 
-  private ContextWrapper(Context base) {
+  ContextWrapper(Context base) {
     super(base);
   }
 
@@ -83,12 +84,13 @@ public final class ContextWrapper extends android.content.ContextWrapper {
     private final List<InflationInterceptor> interceptors = new ArrayList<>();
     @NonNull
     private final List<PostInflationListener> listeners = new ArrayList<>();
+    private boolean useDefaultFactory = false;
 
     /**
      * Creates builder for {@link ContextWrapper}.
      *
      * @param context
-     *     {@link Context} that will be wrapped.
+     *   {@link Context} that will be wrapped.
      */
     public Builder(@NonNull Context context) {
       this.context = context;
@@ -98,7 +100,7 @@ public final class ContextWrapper extends android.content.ContextWrapper {
      * Adds interceptor that will be called before a view is created during inflation.
      *
      * @param interceptor
-     *     Inflation interceptor.
+     *   Inflation interceptor.
      *
      * @return Current instance of the Builder.
      */
@@ -111,12 +113,17 @@ public final class ContextWrapper extends android.content.ContextWrapper {
      * Adds listener that will be called after a view is created during inflation.
      *
      * @param listener
-     *     Post-inflation listener.
+     *   Post-inflation listener.
      *
      * @return Current instance of the Builder.
      */
     public Builder addListener(PostInflationListener listener) {
       listeners.add(listener);
+      return this;
+    }
+
+    public Builder setUseDefaultFactory(boolean useDefaultFactory) {
+      this.useDefaultFactory = useDefaultFactory;
       return this;
     }
 
@@ -127,6 +134,7 @@ public final class ContextWrapper extends android.content.ContextWrapper {
       ContextWrapper wrapper = new ContextWrapper(context);
       wrapper.interceptors.addAll(interceptors);
       wrapper.listeners.addAll(listeners);
+      wrapper.useDefaultFactory = useDefaultFactory;
       return wrapper;
     }
   }

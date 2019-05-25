@@ -1,9 +1,7 @@
 package com.minyushov.inflater;
 
 import android.content.Context;
-import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import java.lang.reflect.Field;
@@ -13,9 +11,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-final class LayoutInflater extends PhoneLayoutInflater implements android.view.LayoutInflater.Factory2 {
-  private static final String TAG = "Inflater";
-
+final class LayoutInflater extends ViewInflater {
   @NonNull
   private final List<ContextWrapper.InflationInterceptor> interceptors = new ArrayList<>();
   @NonNull
@@ -27,14 +23,22 @@ final class LayoutInflater extends PhoneLayoutInflater implements android.view.L
 
   LayoutInflater(android.view.LayoutInflater inflater, Context context) {
     super(inflater, context);
+
+    factory.factory = inflater.getFactory();
+    factory.factory2 = inflater.getFactory2();
+
     if (inflater instanceof LayoutInflater) {
       this.interceptors.addAll(((LayoutInflater) inflater).interceptors);
       this.listeners.addAll(((LayoutInflater) inflater).listeners);
       this.constructorArguments = ((LayoutInflater) inflater).constructorArguments;
     }
     if (context instanceof ContextWrapper) {
-      this.interceptors.addAll(((ContextWrapper) context).interceptors);
-      this.listeners.addAll(((ContextWrapper) context).listeners);
+      ContextWrapper contextWrapper = (ContextWrapper) context;
+      this.interceptors.addAll(contextWrapper.interceptors);
+      this.listeners.addAll(contextWrapper.listeners);
+      if (contextWrapper.useDefaultFactory) {
+        setFactory2(factory);
+      }
     }
   }
 
@@ -69,95 +73,21 @@ final class LayoutInflater extends PhoneLayoutInflater implements android.view.L
     }
   }
 
-  @Override
-  public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-    return onCreateView(context, parent, name, attrs);
-  }
-
-  @Override
-  public View onCreateView(String name, Context context, AttributeSet attrs) {
-    return onCreateView(context, null, name, attrs);
-  }
-
-  @Override
-  protected View onCreateView(String name, AttributeSet attrs) throws ClassNotFoundException {
-    View view = LayoutInflater.this.onCreateView(getContext(), null, name, attrs);
-    if (view == null) {
-      view = super.onCreateView(name, attrs);
-    }
-    if (view != null) {
-      onViewCreated(view, attrs);
-    }
-    return view;
-  }
-
-  @Override
-  protected View onCreateView(View parent, String name, AttributeSet attrs) throws ClassNotFoundException {
-    View view = LayoutInflater.this.onCreateView(getContext(), parent, name, attrs);
-    if (view == null) {
-      view = super.onCreateView(parent, name, attrs);
-    }
-    if (view != null) {
-      onViewCreated(view, attrs);
-    }
-    return view;
-  }
-
   @Nullable
-  private View onCreateView(@NonNull Context context, @Nullable View parent, @NonNull String name, @Nullable AttributeSet attrs) {
+  private View dispatchOnCreateView(View parent, @NonNull String name, @NonNull Context context, @NonNull AttributeSet attrs) {
     for (ContextWrapper.InflationInterceptor interceptor : interceptors) {
       View view = interceptor.onCreateView(context, parent, name, attrs);
       if (view != null) {
         return view;
       }
     }
-    return createView(context, parent, name, attrs);
+    return null;
   }
 
-  private void onViewCreated(@NonNull View view, @NonNull AttributeSet attrs) {
+  private void dispatchOnViewCreated(@NonNull View view, @NonNull AttributeSet attrs) {
     for (ContextWrapper.PostInflationListener listener : listeners) {
       listener.onViewCreated(view, attrs);
     }
-  }
-
-  private View createView(@NonNull Context context, @Nullable View parent, @NonNull String name, @Nullable AttributeSet attrs) {
-    if (name.indexOf('.') > -1) {
-      Object[] constructorArgs = null;
-      Object currentContext = null;
-
-      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-        if (constructorArguments == null) {
-          constructorArguments = ReflectionUtils.getField(android.view.LayoutInflater.class, "mConstructorArgs");
-        }
-
-        if (constructorArguments != null) {
-          constructorArgs = (Object[]) ReflectionUtils.getValue(constructorArguments, this);
-        }
-
-        if (constructorArgs != null) {
-          currentContext = constructorArgs[0];
-          constructorArgs[0] = context;
-          ReflectionUtils.setValue(constructorArguments, this, constructorArgs);
-        }
-      }
-
-      try {
-        return createView(name, null, attrs);
-      } catch (ClassNotFoundException exception) {
-        Log.w(TAG, "Unable to inflate view", exception);
-      } finally {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-          if (constructorArgs != null) {
-            constructorArgs[0] = currentContext;
-          }
-          if (constructorArguments != null) {
-            ReflectionUtils.setValue(constructorArguments, this, constructorArgs);
-          }
-        }
-      }
-    }
-
-    return null;
   }
 
   private class FactoryWrapper implements Factory2 {
@@ -176,22 +106,28 @@ final class LayoutInflater extends PhoneLayoutInflater implements android.view.L
     }
 
     @Override
-    public View onCreateView(String name, Context context, AttributeSet attrs) {
-      View view = LayoutInflater.this.onCreateView(context, null, name, attrs);
+    public View onCreateView(@NonNull String name, @NonNull Context context, @NonNull AttributeSet attrs) {
+      View view = dispatchOnCreateView(null, name, context, attrs);
       if (view == null) {
         if (factory != null) {
           view = factory.onCreateView(name, context, attrs);
         }
       }
-      if (view != null) {
-        LayoutInflater.this.onViewCreated(view, attrs);
+
+      if (view == null) {
+        view = createView(name, context, attrs);
       }
+
+      if (view != null) {
+        dispatchOnViewCreated(view, attrs);
+      }
+
       return view;
     }
 
     @Override
-    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-      View view = LayoutInflater.this.onCreateView(context, parent, name, attrs);
+    public View onCreateView(View parent, @NonNull String name, @NonNull Context context, @NonNull AttributeSet attrs) {
+      View view = dispatchOnCreateView(parent, name, context, attrs);
       if (view == null) {
         if (factory2 != null) {
           view = factory2.onCreateView(parent, name, context, attrs);
@@ -199,9 +135,15 @@ final class LayoutInflater extends PhoneLayoutInflater implements android.view.L
           view = factory.onCreateView(name, context, attrs);
         }
       }
-      if (view != null) {
-        LayoutInflater.this.onViewCreated(view, attrs);
+
+      if (view == null) {
+        view = createView(name, context, attrs);
       }
+
+      if (view != null) {
+        dispatchOnViewCreated(view, attrs);
+      }
+
       return view;
     }
   }
