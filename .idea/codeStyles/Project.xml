@@ -29,14 +29,23 @@
     </option>
     <option name="RIGHT_MARGIN" value="240" />
     <AndroidXmlCodeStyleSettings>
-      <option name="USE_CUSTOM_SETTINGS" value="true" />
+      <option name="LAYOUT_SETTINGS">
+        <value>
+          <option name="INSERT_LINE_BREAK_BEFORE_NAMESPACE_DECLARATION" value="true" />
+        </value>
+      </option>
+      <option name="MANIFEST_SETTINGS">
+        <value>
+          <option name="INSERT_LINE_BREAK_BEFORE_NAMESPACE_DECLARATION" value="true" />
+        </value>
+      </option>
+      <option name="OTHER_SETTINGS">
+        <value>
+          <option name="INSERT_LINE_BREAK_BEFORE_NAMESPACE_DECLARATION" value="true" />
+        </value>
+      </option>
     </AndroidXmlCodeStyleSettings>
     <JavaCodeStyleSettings>
-      <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="99" />
-      <option name="NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND" value="99" />
-      <option name="PACKAGES_TO_USE_IMPORT_ON_DEMAND">
-        <value />
-      </option>
       <option name="IMPORT_LAYOUT_TABLE">
         <value>
           <package name="android" withSubpackages="true" static="false" />
@@ -59,10 +68,10 @@
           <emptyLine />
         </value>
       </option>
-      <option name="JD_ALIGN_PARAM_COMMENTS" value="false" />
       <option name="JD_ADD_BLANK_AFTER_PARM_COMMENTS" value="true" />
       <option name="JD_ADD_BLANK_AFTER_RETURN" value="true" />
       <option name="JD_PARAM_DESCRIPTION_ON_NEW_LINE" value="true" />
+      <option name="JD_INDENT_ON_CONTINUATION" value="true" />
     </JavaCodeStyleSettings>
     <JetCodeStyleSettings>
       <option name="PACKAGES_TO_USE_STAR_IMPORTS">
@@ -72,8 +81,6 @@
       <option name="NAME_COUNT_TO_USE_STAR_IMPORT_FOR_MEMBERS" value="2147483647" />
     </JetCodeStyleSettings>
     <XML>
-      <option name="XML_ALIGN_ATTRIBUTES" value="false" />
-      <option name="XML_SPACE_INSIDE_EMPTY_TAG" value="true" />
       <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
     </XML>
     <codeStyleSettings language="Groovy">
@@ -93,7 +100,6 @@
       </indentOptions>
     </codeStyleSettings>
     <codeStyleSettings language="XML">
-      <option name="FORCE_REARRANGE_MODE" value="1" />
       <indentOptions>
         <option name="INDENT_SIZE" value="2" />
         <option name="CONTINUATION_INDENT_SIZE" value="2" />

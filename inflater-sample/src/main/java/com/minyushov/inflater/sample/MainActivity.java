@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.PopupMenu;
 
 import com.minyushov.inflater.ContextWrapper;
 
@@ -35,15 +36,26 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void attachBaseContext(Context baseContext) {
-    super.attachBaseContext(new ContextWrapper.Builder(baseContext)
+    super.attachBaseContext(
+      new ContextWrapper.Builder(baseContext)
         .addInterceptor(inflationInterceptor)
         .addListener(postInflationListener)
-        .build());
+        .build()
+    );
   }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.a_main);
+
+    findViewById(R.id.text).setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        PopupMenu menu = new PopupMenu(v.getContext(), v);
+        menu.inflate(R.menu.menu);
+        menu.show();
+      }
+    });
   }
 }

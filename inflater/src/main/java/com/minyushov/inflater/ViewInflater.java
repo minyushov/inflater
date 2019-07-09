@@ -51,7 +51,7 @@ class ViewInflater extends LayoutInflater {
 
   /**
    * @return The {@link Filter} currently used by this LayoutInflater to restrict the set of Views
-   * that are allowed to be inflated.
+   *   that are allowed to be inflated.
    */
   @Override
   public Filter getFilter() {
@@ -64,8 +64,9 @@ class ViewInflater extends LayoutInflater {
    * throw an {@link InflateException}. This filter will replace any previous filter set on this
    * LayoutInflater.
    *
-   * @param filter The Filter which restricts the set of Views that are allowed to be inflated.
-   *               This filter will replace any previous filter set on this LayoutInflater.
+   * @param filter
+   *   The Filter which restricts the set of Views that are allowed to be inflated.
+   *   This filter will replace any previous filter set on this LayoutInflater.
    */
   @Override
   public void setFilter(Filter filter) {
@@ -95,7 +96,12 @@ class ViewInflater extends LayoutInflater {
           }
           return view;
         } else {
-          return createFrameworkView(name, null, attrs);
+          try {
+            return createFrameworkView(name, null, attrs);
+          } catch (InflateException e) {
+            // In this case we want to let the base class take a crack at it.
+            return null;
+          }
         }
       } finally {
         constructorArgs[0] = lastContext;
