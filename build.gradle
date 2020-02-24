@@ -11,8 +11,8 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.4.2'
-    classpath 'com.minyushov.gradle:bintray:1.2.4'
+    classpath 'com.android.tools.build:gradle:4.0.0-alpha09'
+    classpath 'com.minyushov.gradle:bintray:2.0.0-alpha05'
   }
 }
 
