@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.minyushov.android:inflater:x'
+    implementation 'com.minyushov.android:inflater:x'
 }
 ```
 
