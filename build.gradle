@@ -1,8 +1,8 @@
 buildscript {
   ext {
     androidMinSdkVersion = 19
-    androidCompileSdkVersion = 29
-    androidTargetSdkVersion = 29
+    androidCompileSdkVersion = 30
+    androidTargetSdkVersion = 30
   }
 
   repositories {
@@ -11,8 +11,8 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:4.0.0-alpha09'
-    classpath 'com.minyushov.gradle:bintray:2.0.0-alpha05'
+    classpath 'com.android.tools.build:gradle:4.1.0'
+    classpath 'com.minyushov.gradle:bintray:2.1.0-rc01'
   }
 }
 
