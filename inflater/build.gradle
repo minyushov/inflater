@@ -27,9 +27,8 @@ bintray {
   vcsUrl = "https://github.com/minyushov/inflater.git"
   license = "Apache-2.0"
   docsSettings {
+    title "Android Inflater ${bintrayUpload.version.get()}"
     options {
-      docTitle "Android Inflater ${bintrayUpload.version.get()}"
-      windowTitle docTitle
       links "https://developer.android.com/reference/"
     }
   }
