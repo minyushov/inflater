@@ -5,10 +5,17 @@ android {
 
   defaultConfig {
     applicationId "com.minyushov.inflater.sample"
+
     minSdkVersion androidMinSdkVersion
     targetSdkVersion androidTargetSdkVersion
+
     versionCode 1
     versionName "1.0"
+  }
+
+  compileOptions {
+    sourceCompatibility javaVersion
+    targetCompatibility javaVersion
   }
 }
 
@@ -16,5 +23,5 @@ dependencies {
   implementation project(":inflater")
 
   implementation "androidx.appcompat:appcompat:1.2.0"
-  implementation "androidx.constraintlayout:constraintlayout:2.0.2"
+  implementation "androidx.constraintlayout:constraintlayout:2.0.4"
 }

@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.minyushov.bintray'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
 
 android {
   compileSdkVersion androidCompileSdkVersion
@@ -8,6 +9,11 @@ android {
     minSdkVersion androidMinSdkVersion
     targetSdkVersion androidTargetSdkVersion
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  }
+
+  compileOptions {
+    sourceCompatibility javaVersion
+    targetCompatibility javaVersion
   }
 }
 
@@ -18,18 +24,73 @@ dependencies {
   androidTestImplementation "androidx.test.ext:junit:1.1.2"
 }
 
-bintray {
-  dryRun = false
-  repo = "android"
-  groupId = "com.minyushov.android"
-  artifactId = "inflater"
-  version = "1.1.6"
-  vcsUrl = "https://github.com/minyushov/inflater.git"
-  license = "Apache-2.0"
-  docsSettings {
-    title "Android Inflater ${bintrayUpload.version.get()}"
-    options {
-      links "https://developer.android.com/reference/"
+tasks.register("sourcesJar", Jar) {
+  archiveClassifier = "sources"
+  from(android.sourceSets.main.java.srcDirs)
+}
+
+afterEvaluate {
+  def properties = new Properties()
+  def file = rootProject.file("local.properties")
+  if (file.isFile()) {
+    file.withInputStream { stream ->
+      properties.load(stream)
     }
+  }
+
+  publishing {
+    publications {
+      maven(MavenPublication) {
+        groupId "io.github.minyushov"
+        artifactId = "inflater"
+        version = "1.2.0"
+
+        from(components.findByName("release"))
+        artifact(tasks.named("sourcesJar"))
+
+        pom {
+          name = artifactId
+          description = "An implementation of ContextWrapper that provides pre and post inflation callbacks"
+          url = "https://github.com/minyushov/inflater"
+          developers {
+            developer {
+              id = "minyushov"
+              name = "Semyon Minyushov"
+              email = "minyushov@gmail.com"
+            }
+          }
+          licenses {
+            license {
+              name = "Apache-2.0"
+              url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+            }
+          }
+          scm {
+            connection = "https://github.com/minyushov/inflater.git"
+            developerConnection = "https://github.com/minyushov/inflater.git"
+            url = "https://github.com/minyushov/inflater/tree/master"
+          }
+        }
+      }
+    }
+    repositories {
+      maven {
+        name "sonatype"
+        url "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+        credentials {
+          username properties["SONATYPE_USER"]
+          password properties["SONATYPE_PASSWORD"]
+        }
+      }
+    }
+  }
+
+  signing {
+    useInMemoryPgpKeys(
+      properties["GPG_KEY_ID"],
+      properties["GPG_KEY"],
+      properties["GPG_PASSWORD"]
+    )
+    sign(publishing.publications)
   }
 }

@@ -2,7 +2,6 @@ package com.minyushov.inflater;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -13,8 +12,6 @@ import org.junit.runner.RunWith;
 
 import java.util.Objects;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -33,15 +30,11 @@ public class InflaterTest {
 
     context = new ContextWrapper.Builder(context)
       .setUseDefaultFactory(true)
-      .addInterceptor(new ContextWrapper.InflationInterceptor() {
-        @Nullable
-        @Override
-        public View onCreateView(@NonNull Context context, @Nullable View parent, @NonNull String name, @Nullable AttributeSet attrs) {
-          if (Objects.equals(name, "TextView")) {
-            return new CustomTextView(context, attrs);
-          }
-          return null;
+      .addInterceptor((wrappedContext, parent, name, attrs) -> {
+        if (Objects.equals(name, "TextView")) {
+          return new CustomTextView(wrappedContext, attrs);
         }
+        return null;
       })
       .build();
 
@@ -66,15 +59,11 @@ public class InflaterTest {
 
     context = new ContextWrapper.Builder(context)
       .setUseDefaultFactory(true)
-      .addInterceptor(new ContextWrapper.InflationInterceptor() {
-        @Nullable
-        @Override
-        public View onCreateView(@NonNull Context context, @Nullable View parent, @NonNull String name, @Nullable AttributeSet attrs) {
-          if (Objects.equals(name, "androidx.appcompat.widget.AppCompatTextView")) {
-            return new CustomTextView(context, attrs);
-          }
-          return null;
+      .addInterceptor((wrappedContext, parent, name, attrs) -> {
+        if (Objects.equals(name, "androidx.appcompat.widget.AppCompatTextView")) {
+          return new CustomTextView(wrappedContext, attrs);
         }
+        return null;
       })
       .build();
 
@@ -100,12 +89,9 @@ public class InflaterTest {
 
     context = new ContextWrapper.Builder(context)
       .setUseDefaultFactory(true)
-      .addListener(new ContextWrapper.PostInflationListener() {
-        @Override
-        public void onViewCreated(@NonNull View view, @Nullable AttributeSet attrs) {
-          if (view instanceof TextView) {
-            ((TextView) view).setTypeface(Typeface.MONOSPACE);
-          }
+      .addListener((inflatedView, attrs) -> {
+        if (inflatedView instanceof TextView) {
+          ((TextView) inflatedView).setTypeface(Typeface.MONOSPACE);
         }
       })
       .build();
