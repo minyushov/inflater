@@ -1,5 +1,7 @@
 # Inflater
 
+![Maven Central](https://img.shields.io/maven-central/v/io.github.minyushov/inflater)
+
 An implementation of ContextWrapper that provides pre- and post-inflation callbacks.
 
 # Getting started
@@ -7,16 +9,10 @@ An implementation of ContextWrapper that provides pre- and post-inflation callba
 Include inflater as a Gradle compile dependency:
 
 ```groovy
-repositories {
-    jcenter()
-}
-
 dependencies {
-    implementation 'com.minyushov.android:inflater:x'
+    implementation 'io.github.minyushov:inflater:$version'
 }
 ```
-
-Please replace `x` with the latest version: [![Download](https://api.bintray.com/packages/minyushov/android/inflater/images/download.svg)](https://bintray.com/minyushov/android/inflater/_latestVersion)
 
 Implement InflationInterceptor or PostInflationListener:
 
